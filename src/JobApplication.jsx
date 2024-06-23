@@ -32,8 +32,17 @@ const JobApplication = () => {
           [name]: checked,
         },
       });
+      setErrors((prevErrors) => {
+        const { [name]: removedError, ...rest } = prevErrors;
+        return rest;
+      });
     } else {
       setFormData({ ...formData, [name]: value });
+      setFormData({ ...formData, [name]: value });
+      setErrors((prevErrors) => {
+        const { [name]: removedError, ...rest } = prevErrors;
+        return rest;
+      });
     }
   };
 
@@ -54,8 +63,10 @@ const JobApplication = () => {
       formErrors.portfolioUrl = 'Portfolio URL must be a valid URL';
     if (formData.position === 'Manager' && !formData.managementExperience)
       formErrors.managementExperience = 'Management Experience is required';
-    if (!Object.values(formData.additionalSkills).includes(true))
-      formErrors.additionalSkills = 'At least one skill must be selected';
+    const selectedSkills = Object.values(formData.additionalSkills).some(skill => skill);
+  if (!selectedSkills) {
+    formErrors.additionalSkills = 'At least one skill must be selected';
+  }
     if (!formData.preferredInterviewTime)
       formErrors.preferredInterviewTime = 'Preferred Interview Time is required';
     return formErrors;
